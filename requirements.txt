@@ -83,4 +83,7 @@ wcwidth==0.2.13
 websocket-client==1.8.0
 zope.event==6.0
 zope.interface==8.0
+uuid
+os
+
 
