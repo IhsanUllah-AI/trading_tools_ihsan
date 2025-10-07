@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timezone
+from datetime import datetime
+import pytz  # Add pytz for timezone handling
 import requests
 import time
 import uuid
@@ -13,7 +14,7 @@ from tools import fib, elliott, ichimoku, wyckoff, gann
 
 st.set_page_config(page_title="Master Trading Analysis App", layout="wide", page_icon="📊")
 
-# Custom CSS
+# Custom CSS (unchanged)
 st.markdown("""
 <style>
     .main-header {
@@ -102,7 +103,7 @@ for tool in tools_list:
 if 'run_analysis' not in st.session_state:
     st.session_state.run_analysis = False
 
-# Sidebar for global settings
+# Sidebar for global settings (unchanged)
 st.sidebar.header("⚙️ Global Settings")
 popular_symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT", "XRPUSDT", "SOLUSDT", "DOTUSDT", "DOGEUSDT", 
                    "LTCUSDT", "LINKUSDT", "AVAXUSDT", "UNIUSDT", "ATOMUSDT"]
@@ -146,7 +147,7 @@ auto_refresh = st.sidebar.checkbox("Auto Refresh every 60 seconds")
 # Tool selection
 selected_tools = st.sidebar.multiselect("Select Analysis Tools", tools_list, default=["Fibonacci", "Elliott", "Ichimoku", "Wyckoff", "Gann"])
 
-# Tool-specific settings
+# Tool-specific settings (unchanged)
 tool_params = {}
 for tool in selected_tools:
     with st.sidebar.expander(f"{tool} Settings"):
@@ -299,6 +300,9 @@ st.sidebar.markdown("---")
 if st.sidebar.button("🚀 Run Analysis", type="primary", use_container_width=True):
     st.session_state.run_analysis = True
 
+# Define PKT timezone
+pkt_tz = pytz.timezone('Asia/Karachi')
+
 # Main logic: Run selected tools
 if st.session_state.run_analysis:
     try:
@@ -349,7 +353,7 @@ if st.session_state.run_analysis:
                                         'outcome': outcome,
                                         'close_price': close_price,
                                         'profit_pct': profit_pct,
-                                        'close_time': datetime.now(timezone.utc)
+                                        'close_time': datetime.now(pkt_tz)  # Changed to PKT
                                     })
                                     st.session_state[history_key].append(closed_trade)
                                     del st.session_state[active_key][symbol]
@@ -363,7 +367,7 @@ if st.session_state.run_analysis:
                                     'entry_price': entry_price,
                                     'stop_loss': stop_loss,
                                     'take_profit': take_profit,
-                                    'entry_time': datetime.now(timezone.utc),
+                                    'entry_time': datetime.now(pkt_tz),  # Changed to PKT
                                     'signals': signals,
                                     'signal_descriptions': signal_descriptions,
                                     'confidence': confidence,
@@ -400,7 +404,7 @@ if st.session_state.run_analysis:
                                             'outcome': outcome,
                                             'close_price': close_price,
                                             'profit_pct': profit_pct,
-                                            'close_time': datetime.now(timezone.utc)
+                                            'close_time': datetime.now(pkt_tz)  # Changed to PKT
                                         })
                                         st.session_state[history_key].append(closed_trade)
                                         del st.session_state[active_key][symbol_key]
@@ -416,7 +420,7 @@ if st.session_state.run_analysis:
                                         'entry_price': sig['entry_price'],
                                         'stop_loss': sig['sl'],
                                         'take_profit': sig['tp'],
-                                        'entry_time': datetime.now(timezone.utc),
+                                        'entry_time': datetime.now(pkt_tz),  # Changed to PKT
                                         'signals': [sig['reason']],
                                         'signal_descriptions': [sig['reason']],
                                         'confidence': results['wave_data_by_degree'][sig.get('degree', 'Minor')]['confidence'],
@@ -453,7 +457,7 @@ if st.session_state.run_analysis:
                                             'outcome': outcome,
                                             'close_price': close_price,
                                             'profit_pct': profit_pct,
-                                            'close_time': datetime.now(timezone.utc)
+                                            'close_time': datetime.now(pkt_tz)  # Changed to PKT
                                         })
                                         st.session_state[history_key].append(closed_trade)
                                         del st.session_state[active_key][symbol_key]
@@ -469,7 +473,7 @@ if st.session_state.run_analysis:
                                         'entry_price': sig['entry_price'],
                                         'stop_loss': sig['sl'],
                                         'take_profit': sig['tp'],
-                                        'entry_time': datetime.now(timezone.utc),
+                                        'entry_time': datetime.now(pkt_tz),  # Changed to PKT
                                         'signals': [sig['reason']],
                                         'signal_descriptions': [sig['reason']],
                                         'confidence': results['confidence'],
@@ -505,7 +509,7 @@ if st.session_state.run_analysis:
                                         'outcome': outcome,
                                         'close_price': close_price,
                                         'profit_pct': profit_pct,
-                                        'close_time': datetime.now(timezone.utc)
+                                        'close_time': datetime.now(pkt_tz)  # Changed to PKT
                                     })
                                     st.session_state[history_key].append(closed_trade)
                                     del st.session_state[active_key][symbol]
@@ -520,7 +524,7 @@ if st.session_state.run_analysis:
                                         'entry_price': sig['entry_price'],
                                         'stop_loss': sig['sl'],
                                         'take_profit': sig['tp'],
-                                        'entry_time': datetime.now(timezone.utc),
+                                        'entry_time': datetime.now(pkt_tz),  # Changed to PKT
                                         'signals': [sig['reason']],
                                         'signal_descriptions': [sig['reason']],
                                         'confidence': results['confidence'],
@@ -551,7 +555,7 @@ for tool in selected_tools:
                     st.write(f"**Entry Price:** {trade['entry_price']:.4f}")
                     st.write(f"**Stop Loss:** {trade['stop_loss']:.4f}")
                     st.write(f"**Take Profit:** {trade['take_profit']:.4f}")
-                    st.write(f"**Entry Time (UTC):** {trade['entry_time']}")
+                    st.write(f"**Entry Time (PKT):** {trade['entry_time']}")  # Updated label to PKT
                     st.write(f"**Confidence:** {trade['confidence']}")
                     st.write("**Signals:**")
                     for desc in trade['signal_descriptions']:
