@@ -197,17 +197,9 @@ for custom_symbol in custom_symbols:
         else:
             st.sidebar.error(f"Invalid symbol: {custom_symbol}. Please check the format (e.g., FETUSDT).")
 
-# Interval selection per coin
-intervals = ["1m", "3m","5m", "15m","1h","2h","3h", "4h","1d"]
-symbol_intervals = {}
-st.sidebar.subheader("Select Intervals for Each Coin")
-for symbol in symbols:
-    symbol_intervals[symbol] = st.sidebar.selectbox(
-        f"Interval for {symbol}", 
-        intervals, 
-        index=2 if symbol == "BTCUSDT" else 4 if symbol == "ETHUSDT" else 2,
-        key=f"interval_{symbol}"
-    )
+# Interval selection for all coins
+intervals = ["1m", "3m", "5m", "15m", "1h", "2h", "3h", "4h", "1d"]
+interval = st.sidebar.selectbox("Interval for All Coins", intervals, index=2)
 
 candle_limit = st.sidebar.number_input(
     "Number of candles to fetch", 
@@ -407,7 +399,7 @@ st.sidebar.markdown("---")
 with st.sidebar.expander("ℹ️ How to use"):
     st.info("""
     **How to use:**
-    1. Select multiple coins and custom intervals for each.
+    1. Select multiple coins and a single timeframe for all.
     2. Add a custom symbol if needed (e.g., LUNABUSD).
     3. Select one or more analysis tools.
     4. **Gann provides indirect information only** - no direct trades.
@@ -856,8 +848,6 @@ if st.session_state.run_analysis:
             
             for symbol in symbols:
                 with st.expander(f"Combined Analysis for {symbol}", expanded=True):
-                    interval = symbol_intervals.get(symbol, "5m")
-                    
                     with st.spinner(f'Fetching data for {symbol} ({interval})...'):
                         df_live = fetch_candles_from_binance(symbol, interval, candle_limit)
                         if df_live is None:
@@ -1093,7 +1083,6 @@ if st.session_state.run_analysis:
         with individual_tab:
             # Original individual tool analysis
             for symbol in symbols:
-                interval = symbol_intervals.get(symbol, "5m")
                 with st.expander(f"Individual Analysis for {symbol} ({interval})", expanded=True):
                     with st.spinner(f'Fetching data for {symbol} ({interval})...'):
                         df_live = fetch_candles_from_binance(symbol, interval, candle_limit)
@@ -1388,7 +1377,3 @@ if auto_refresh:
 
 st.markdown("---")
 st.caption("⚡ Data provided by Binance API • Disclaimer: This is a live trading application. Trading involves risk — use responsibly.")
-
-
-
-
