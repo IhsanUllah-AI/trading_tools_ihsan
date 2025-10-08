@@ -198,7 +198,7 @@ for custom_symbol in custom_symbols:
             st.sidebar.error(f"Invalid symbol: {custom_symbol}. Please check the format (e.g., FETUSDT).")
 
 # Interval selection per coin
-intervals = ["1m", "5m", "15m", "4h","1d"]
+intervals = ["1m", "3m",5m", "15m","1h","2h","3h", "4h","1d"]
 symbol_intervals = {}
 st.sidebar.subheader("Select Intervals for Each Coin")
 for symbol in symbols:
@@ -1388,3 +1388,4 @@ if auto_refresh:
 
 st.markdown("---")
 st.caption("ℹ️ Data provided by Binance API • Disclaimer: This tool is for educational purposes only. Trades are simulated.")
+
