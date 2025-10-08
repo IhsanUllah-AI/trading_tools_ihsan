@@ -1387,6 +1387,8 @@ if auto_refresh:
     st.rerun()
 
 st.markdown("---")
-st.caption("ℹ️ Data provided by Binance API • Disclaimer: This tool is for educational purposes only. Trades are simulated.")
+st.caption("⚡ Data provided by Binance API • Disclaimer: This is a live trading application. Trading involves risk — use responsibly.")
+
+
 
 
